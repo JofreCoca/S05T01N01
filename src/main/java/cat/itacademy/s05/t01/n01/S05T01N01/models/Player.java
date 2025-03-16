@@ -16,6 +16,10 @@ public class Player {
     public Player() {
     }
 
+    public Player(String name) {
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }
@@ -36,7 +40,7 @@ public class Player {
         return score;
     }
 
-    public void setScore(int Score) {
+    public void setScore(double Score) {
         this.score = Score;
     }
 

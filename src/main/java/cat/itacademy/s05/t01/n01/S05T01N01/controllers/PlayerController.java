@@ -3,7 +3,10 @@ package cat.itacademy.s05.t01.n01.S05T01N01.controllers;
 import cat.itacademy.s05.t01.n01.S05T01N01.exceptions.PlayerNotFoundException;
 import cat.itacademy.s05.t01.n01.S05T01N01.models.Player;
 import cat.itacademy.s05.t01.n01.S05T01N01.services.PlayerService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -19,6 +22,13 @@ public class PlayerController {
     @PostMapping("/add")
     public ResponseEntity<Mono<Player>> add(@RequestBody Player player) {
         return ResponseEntity.ok(service.add(player));
+    }
+
+    @PutMapping(value = {"/player/{playerId}"})
+    public Mono<ResponseEntity<Player>> updatePlayerName(@Parameter(description = "Enter player id") @PathVariable Integer playerId,
+                                                         @RequestBody @Schema(description = "Enter new player name") String newName){
+        return service.updatePlayerName(playerId, newName).map(player ->
+                ResponseEntity.status(HttpStatus.OK).body(player));
     }
 
     @PutMapping("/update")

@@ -17,6 +17,18 @@ public class PlayerService {
         return repository.save(player);
     }
 
+    public Mono<Player> updatePlayerName(int id, String newName) {
+        if (newName == null) {
+            return Mono.error(new IllegalArgumentException("Name cannot be null"));
+        }
+        return repository.findById(id)
+                .flatMap(p -> {
+                    p.setName(newName);
+                    return repository.save(p);
+                })
+                .switchIfEmpty(Mono.error(new RuntimeException("Player not found")));
+    }
+
     public Mono<Player> update(Player player) {
         if (player.getId() == 0) {
             return Mono.error(new PlayerNotFoundException("The id is null or invalid"));
