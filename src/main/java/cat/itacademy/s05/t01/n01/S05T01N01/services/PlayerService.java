@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Comparator;
+
 @Service
 public class PlayerService {
     @Autowired
@@ -68,5 +70,11 @@ public class PlayerService {
 
     public Flux<Player> getAll() {
         return repository.findAll();
+    }
+
+    public Flux<Player> getPlayersSorted() {
+        return this.repository.findAll()
+                .sort(Comparator.comparingDouble(Player::getScore).reversed())
+                .switchIfEmpty(Mono.empty());
     }
 }

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/player")
 public class PlayerController {
@@ -58,5 +60,11 @@ public class PlayerController {
     @GetMapping("/getAll")
     public ResponseEntity<Flux<Player>> getAll() {
         return ResponseEntity.ok(service.getAll());
+    }
+
+    @GetMapping(value = {"/ranking"})
+    public Mono<ResponseEntity<List<Player>>> getPlayersRanking(){
+        return service.getPlayersSorted().collectList().map(players ->
+                ResponseEntity.status(HttpStatus.OK).body(players));
     }
 }
