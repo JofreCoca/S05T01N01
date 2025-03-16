@@ -1,7 +1,10 @@
 package cat.itacademy.s05.t01.n01.S05T01N01.models;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+
+import javax.annotation.processing.Generated;
 
 @Table("players")
 public class Player {
