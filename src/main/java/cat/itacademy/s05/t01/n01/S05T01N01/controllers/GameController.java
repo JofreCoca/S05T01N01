@@ -41,9 +41,9 @@ public class GameController {
         return gameService.deleteGame(id).thenReturn(ResponseEntity.noContent().build());
     }
 
-    /*@GetMapping("/ranking")
+    @GetMapping("/ranking")
     public Mono<ResponseEntity<Game>> getRanking() {
         return gameService.getRanking()
                 .map(game -> ResponseEntity.status(HttpStatus.OK).body(game));
-    }*/
+    }
 }
