@@ -16,6 +16,7 @@ public class Game {
     private ArrayList<Card> Croupiercards;
     private ArrayList<Card> Playercards;
     private boolean finish;
+    private int score;
 
     public Game(String namePlayer) {
         this.namePlayer = namePlayer;
@@ -23,6 +24,15 @@ public class Game {
         this.Croupiercards = new ArrayList<>();
         this.Playercards = new ArrayList<>();
         this.finish = false;
+        this.score = 0;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public String getNamePlayer() {

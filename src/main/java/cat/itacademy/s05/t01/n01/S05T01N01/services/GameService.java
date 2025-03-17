@@ -29,6 +29,7 @@ public class GameService {
                     executeRoll(game);
                     executePlayer(game);
                     executeCroupier(game);
+                    finishGame(game);
                     return repository.save(game)
                             .flatMap(savedGame -> repository.findById(savedGame.getId())); // por si quieres "refrescar"
                 });
@@ -65,6 +66,19 @@ public class GameService {
                 .sum()<17){
             game.getCroupiercards().add(game.getDeckcards().get(0));
             game.getDeckcards().remove(0);
+        }
+
+    }
+
+    private void finishGame(Game game){
+        int puntuacionPlayer = game.getPlayercards().stream()
+                .mapToInt(card -> card.getRank().getValor())
+                .sum();
+        int puntuacionCroupier = game.getCroupiercards().stream()
+                .mapToInt(card -> card.getRank().getValor())
+                .sum();
+        if((puntuacionPlayer > puntuacionCroupier) && puntuacionPlayer < 22){
+            game.setScore(10);
         }
         game.setFinish(true);
     }
