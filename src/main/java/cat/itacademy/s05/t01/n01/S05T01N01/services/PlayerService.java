@@ -15,6 +15,10 @@ public class PlayerService {
     @Autowired
     private PlayerRepository repository;
 
+    public PlayerService(PlayerRepository repository) {
+        this.repository = repository;
+    }
+
     public Mono<Player> add(Player player) {
         return repository.save(player);
     }
@@ -77,4 +81,8 @@ public class PlayerService {
                 .sort(Comparator.comparingDouble(Player::getScore).reversed())
                 .switchIfEmpty(Mono.empty());
     }
+    public Mono<Player> findByName(String name) {
+        return repository.findByName(name);
+    }
+
 }

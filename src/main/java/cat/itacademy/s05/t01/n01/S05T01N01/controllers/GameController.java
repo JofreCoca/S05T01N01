@@ -2,9 +2,6 @@ package cat.itacademy.s05.t01.n01.S05T01N01.controllers;
 
 import cat.itacademy.s05.t01.n01.S05T01N01.models.Game;
 import cat.itacademy.s05.t01.n01.S05T01N01.services.GameService;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +28,8 @@ public class GameController {
     }
 
     @PostMapping("/{id}/play")
-    public Mono<ResponseEntity<Game>> playGame(@PathVariable String id) {
-        return gameService.playGame(id)
+    public Mono<ResponseEntity<Game>> playGame(@RequestParam String id, @RequestParam String nextMove) {
+        return gameService.playGame(id, nextMove)
                 .map(game -> ResponseEntity.status(HttpStatus.OK).body(game));
     }
 
