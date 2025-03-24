@@ -1,14 +1,12 @@
 package cat.itacademy.s05.t01.n01.S05T01N01.services;
-
-import cat.itacademy.s05.t01.n01.S05T01N01.exceptions.PlayerNotFoundException;
 import cat.itacademy.s05.t01.n01.S05T01N01.models.Game;
 import cat.itacademy.s05.t01.n01.S05T01N01.models.Player;
 import cat.itacademy.s05.t01.n01.S05T01N01.repository.GameRepository;
-import cat.itacademy.s05.t01.n01.S05T01N01.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+
+import java.util.Optional;
 
 @Service
 public class GameService {
@@ -43,7 +41,7 @@ public class GameService {
                     }
                     executePlayer(game, nextMove);
                     return repository.save(game)
-                            .flatMap(savedGame -> repository.findById(savedGame.getId())); // por si quieres "refrescar"
+                            .flatMap(savedGame -> repository.findById(savedGame.getId()));
                 });
     }
 
@@ -63,7 +61,7 @@ public class GameService {
         game.getDeckcards().remove(0);
     }
 
-    public void executePlayer(Game game, String nextMove) {
+    public Mono<Game> executePlayer(Game game, String nextMove) {
         if(nextMove.equalsIgnoreCase("hit")){
             game.getPlayercards().add(game.getDeckcards().get(0));
             game.getDeckcards().remove(0);
@@ -77,7 +75,8 @@ public class GameService {
             executeCroupier(game);
             finishGame(game);
         }
-        repository.save(game);
+
+        return repository.save(game);
     }
 
     public void executeCroupier(Game game) {
@@ -98,14 +97,20 @@ public class GameService {
                 .mapToInt(card -> card.getRank().getValor())
                 .sum())){
             game.setScore(10);
+
+            playerService.findByName(game.getNamePlayer())
+                    .flatMap(player -> {
+                        player.setScore(player.getScore() + 10);
+                        return playerService.update(player);
+                    })
+                    .subscribe();
         }
         game.setFinish(true);
     }
 
-    public Mono<Game> getRanking() {
-        return repository.findAll()
-                .filter(Game::isFinish)
-                .sort((g1, g2) -> Integer.compare(g2.getScore(), g1.getScore()))
+    public Mono<Player> getRanking() {
+        return playerService.getAll()
+                .sort((g1, g2) -> Double.compare(g2.getScore(), g1.getScore()))
                 .next();
     }
 }

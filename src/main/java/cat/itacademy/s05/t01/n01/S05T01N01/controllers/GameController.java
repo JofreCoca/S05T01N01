@@ -1,6 +1,7 @@
 package cat.itacademy.s05.t01.n01.S05T01N01.controllers;
 
 import cat.itacademy.s05.t01.n01.S05T01N01.models.Game;
+import cat.itacademy.s05.t01.n01.S05T01N01.models.Player;
 import cat.itacademy.s05.t01.n01.S05T01N01.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,7 +40,7 @@ public class GameController {
     }
 
     @GetMapping("/ranking")
-    public Mono<ResponseEntity<Game>> getRanking() {
+    public Mono<ResponseEntity<Player>> getRanking() {
         return gameService.getRanking()
                 .map(game -> ResponseEntity.status(HttpStatus.OK).body(game));
     }
